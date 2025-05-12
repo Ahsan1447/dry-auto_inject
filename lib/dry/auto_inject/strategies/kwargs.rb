@@ -68,7 +68,12 @@ module Dry
               assign_dependencies.(kwargs, self)
 
               if super_parameters.splat?
-                super(*args, **kwargs, &block)
+                # Only pass arguments if the parent accepts them
+                if super_parameters.empty?
+                  super(&block)
+                else
+                  super(*args, **kwargs, &block)
+                end
               else
                 super_kwargs = slice_kwargs.(kwargs, super_parameters)
 
